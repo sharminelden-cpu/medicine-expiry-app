@@ -8,31 +8,79 @@
   </head>
   <body>
 
-    <h1>Medicine Expiry Tracker</h1>
+    <div class="container">
 
-    <div class="medicine-card">
-      <h2>Paracetamol 500mg</h2>
-      <p>Batch: <strong>PCM-2024-001</strong></p>
-      <p>Quantity: <strong>100 tablets</strong></p>
-      <p>Expiry: <strong>2025-08-15</strong></p>
-      <span class="badge safe">Safe</span>
+      <h1>Medicine Expiry Tracker</h1>
+
+      <!-- ADD MEDICINE FORM -->
+      <div class="form-box">
+        <h2>Add New Medicine</h2>
+
+        <div class="form-group">
+          <label>Medicine Name</label>
+          <input type="text" id="medicineName" placeholder="e.g. Paracetamol 500mg" />
+        </div>
+
+        <div class="form-group">
+          <label>Batch Number</label>
+          <input type="text" id="batchNumber" placeholder="e.g. PCM-2024-001" />
+        </div>
+
+        <div class="form-group">
+          <label>Quantity</label>
+          <input type="number" id="quantity" placeholder="e.g. 100" />
+        </div>
+
+        <div class="form-group">
+          <label>Unit</label>
+          <select id="unit">
+            <option value="tablets">Tablets</option>
+            <option value="capsules">Capsules</option>
+            <option value="ml">ML</option>
+            <option value="strips">Strips</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Expiry Date</label>
+          <input type="date" id="expiryDate" />
+        </div>
+
+        <button class="btn-add" onclick="addMedicine()">Add Medicine</button>
+
+      </div>
+
+      <!-- MEDICINE LIST -->
+      <h2 class="list-title">Medicine Inventory</h2>
+      <div id="medicineList">
+
+        <div class="medicine-card">
+          <h3>Paracetamol 500mg</h3>
+          <p>Batch: <strong>PCM-2024-001</strong></p>
+          <p>Quantity: <strong>100 tablets</strong></p>
+          <p>Expiry: <strong>2025-08-15</strong></p>
+          <span class="badge safe">Safe</span>
+        </div>
+
+        <div class="medicine-card">
+          <h3>Amoxicillin 250mg</h3>
+          <p>Batch: <strong>AMX-2024-042</strong></p>
+          <p>Quantity: <strong>50 capsules</strong></p>
+          <p>Expiry: <strong>2026-07-10</strong></p>
+          <span class="badge expiring">Expiring Soon</span>
+        </div>
+
+        <div class="medicine-card">
+          <h3>Ibuprofen 400mg</h3>
+          <p>Batch: <strong>IBU-2023-089</strong></p>
+          <p>Quantity: <strong>30 tablets</strong></p>
+          <p>Expiry: <strong>2025-01-01</strong></p>
+          <span class="badge expired">Expired</span>
+        </div>
+
+      </div>
     </div>
 
-    <div class="medicine-card">
-      <h2>Amoxicillin 250mg</h2>
-      <p>Batch: <strong>AMX-2024-042</strong></p>
-      <p>Quantity: <strong>50 capsules</strong></p>
-      <p>Expiry: <strong>2026-07-10</strong></p>
-      <span class="badge expiring">Expiring Soon</span>
-    </div>
-
-    <div class="medicine-card">
-      <h2>Ibuprofen 400mg</h2>
-      <p>Batch: <strong>IBU-2023-089</strong></p>
-      <p>Quantity: <strong>30 tablets</strong></p>
-      <p>Expiry: <strong>2025-01-01</strong></p>
-      <span class="badge expired">Expired</span>
-    </div>
-
+    <script src="script.js"></script>
   </body>
 </html>
