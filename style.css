@@ -11,7 +11,7 @@ body {
 }
 
 .container {
-  max-width: 600px;
+  max-width: 700px;
   margin: 0 auto;
 }
 
@@ -21,6 +21,38 @@ h1 {
   font-size: 26px;
 }
 
+/* DASHBOARD */
+.dashboard {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 2rem;
+}
+
+.dash-card {
+  flex: 1;
+  background: white;
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+  border: 1px solid #e0e0e0;
+}
+
+.dash-card h3 {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 6px;
+}
+
+.dash-card p {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.dash-safe { color: #155724; }
+.dash-expiring { color: #856404; }
+.dash-expired { color: #721c24; }
+
+/* FORM */
 .form-box {
   background: white;
   border-radius: 12px;
@@ -79,6 +111,7 @@ h1 {
   background-color: #357abd;
 }
 
+/* MEDICINE LIST */
 .list-title {
   font-size: 18px;
   color: #333;
@@ -91,6 +124,7 @@ h1 {
   padding: 1.2rem 1.5rem;
   margin-bottom: 1rem;
   border: 1px solid #e0e0e0;
+  overflow: hidden;
 }
 
 .medicine-card h3 {
@@ -105,6 +139,7 @@ h1 {
   color: #555;
 }
 
+/* BADGES */
 .badge {
   display: inline-block;
   margin-top: 10px;
@@ -117,3 +152,21 @@ h1 {
 .safe { background-color: #d4edda; color: #155724; }
 .expiring { background-color: #fff3cd; color: #856404; }
 .expired { background-color: #f8d7da; color: #721c24; }
+
+/* DELETE BUTTON */
+.btn-delete {
+  margin-top: 10px;
+  padding: 5px 14px;
+  background: white;
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  float: right;
+}
+
+.btn-delete:hover {
+  background: #e74c3c;
+  color: white;
+}

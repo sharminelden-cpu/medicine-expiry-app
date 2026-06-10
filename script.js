@@ -1,30 +1,28 @@
 // ==============================
-// 1. WHEN PAGE LOADS - show saved medicines
+// 1. WHEN PAGE LOADS
 // ==============================
 window.onload = function() {
   loadMedicines();
 };
 
 // ==============================
-// 2. ADD MEDICINE - runs when button clicked
+// 2. ADD MEDICINE
 // ==============================
 function addMedicine() {
 
-  // Read form values
   const name = document.getElementById("medicineName").value;
   const batch = document.getElementById("batchNumber").value;
   const quantity = document.getElementById("quantity").value;
   const unit = document.getElementById("unit").value;
   const expiry = document.getElementById("expiryDate").value;
 
-  // Check all fields filled
   if (!name || !batch || !quantity || !expiry) {
     alert("Please fill in all fields!");
     return;
   }
 
-  // Create medicine object
   const medicine = {
+    id: Date.now(), // unique ID for each medicine
     name: name,
     batch: batch,
     quantity: quantity,
@@ -32,44 +30,55 @@ function addMedicine() {
     expiry: expiry
   };
 
-  // Get existing medicines from localStorage
   const medicines = getSavedMedicines();
-
-  // Add new medicine to the list
   medicines.push(medicine);
-
-  // Save updated list back to localStorage
   localStorage.setItem("medicines", JSON.stringify(medicines));
 
-  // Show the new card on screen
   displayCard(medicine, true);
+  updateDashboard();
 
-  // Clear the form
   document.getElementById("medicineName").value = "";
   document.getElementById("batchNumber").value = "";
   document.getElementById("quantity").value = "";
   document.getElementById("expiryDate").value = "";
-
 }
 
 // ==============================
-// 3. LOAD - read from localStorage and show all cards
+// 3. DELETE MEDICINE
+// ==============================
+function deleteMedicine(id) {
+  // Get saved medicines
+  let medicines = getSavedMedicines();
+
+  // Remove the one with matching id
+  medicines = medicines.filter(function(m) {
+    return m.id !== id;
+  });
+
+  // Save updated list
+  localStorage.setItem("medicines", JSON.stringify(medicines));
+
+  // Reload all cards
+  loadMedicines();
+}
+
+// ==============================
+// 4. LOAD ALL MEDICINES
 // ==============================
 function loadMedicines() {
   const medicines = getSavedMedicines();
-
-  // Remove the 3 hardcoded cards first
   const list = document.getElementById("medicineList");
   list.innerHTML = "";
 
-  // Show each saved medicine
   medicines.forEach(function(medicine) {
     displayCard(medicine, false);
   });
+
+  updateDashboard();
 }
 
 // ==============================
-// 4. DISPLAY - create and show one card
+// 5. DISPLAY ONE CARD
 // ==============================
 function displayCard(medicine, addToTop) {
   const status = getStatus(medicine.expiry);
@@ -79,6 +88,7 @@ function displayCard(medicine, addToTop) {
   card.className = "medicine-card";
 
   card.innerHTML = `
+    <button class="btn-delete" onclick="deleteMedicine(${medicine.id})">Delete</button>
     <h3>${medicine.name}</h3>
     <p>Batch: <strong>${medicine.batch}</strong></p>
     <p>Quantity: <strong>${medicine.quantity} ${medicine.unit}</strong></p>
@@ -94,27 +104,42 @@ function displayCard(medicine, addToTop) {
 }
 
 // ==============================
-// 5. GET SAVED - read medicines array from localStorage
+// 6. UPDATE DASHBOARD COUNTS
+// ==============================
+function updateDashboard() {
+  const medicines = getSavedMedicines();
+
+  let safe = 0;
+  let expiring = 0;
+  let expired = 0;
+
+  medicines.forEach(function(medicine) {
+    const status = getStatus(medicine.expiry);
+    if (status.class === "safe") safe++;
+    else if (status.class === "expiring") expiring++;
+    else if (status.class === "expired") expired++;
+  });
+
+  document.getElementById("countSafe").textContent = safe;
+  document.getElementById("countExpiring").textContent = expiring;
+  document.getElementById("countExpired").textContent = expired;
+}
+
+// ==============================
+// 7. GET SAVED MEDICINES
 // ==============================
 function getSavedMedicines() {
   const saved = localStorage.getItem("medicines");
-
-  // If nothing saved yet, return empty array
-  if (!saved) {
-    return [];
-  }
-
-  // Convert text back to array
+  if (!saved) return [];
   return JSON.parse(saved);
 }
 
 // ==============================
-// 6. STATUS - calculate badge from expiry date
+// 8. GET STATUS
 // ==============================
 function getStatus(expiryDate) {
   const today = new Date();
   const expiry = new Date(expiryDate);
-
   const diffTime = expiry - today;
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
