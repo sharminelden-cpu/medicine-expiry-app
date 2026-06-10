@@ -1,39 +1,50 @@
-// This function runs when Add Medicine button is clicked
+// ==============================
+// 1. WHEN PAGE LOADS - show saved medicines
+// ==============================
+window.onload = function() {
+  loadMedicines();
+};
+
+// ==============================
+// 2. ADD MEDICINE - runs when button clicked
+// ==============================
 function addMedicine() {
 
-  // Step 1 - Read what the user typed in the form
+  // Read form values
   const name = document.getElementById("medicineName").value;
   const batch = document.getElementById("batchNumber").value;
   const quantity = document.getElementById("quantity").value;
   const unit = document.getElementById("unit").value;
   const expiry = document.getElementById("expiryDate").value;
 
-  // Step 2 - Check that all fields are filled
+  // Check all fields filled
   if (!name || !batch || !quantity || !expiry) {
     alert("Please fill in all fields!");
     return;
   }
 
-  // Step 3 - Calculate status based on expiry date
-  const status = getStatus(expiry);
+  // Create medicine object
+  const medicine = {
+    name: name,
+    batch: batch,
+    quantity: quantity,
+    unit: unit,
+    expiry: expiry
+  };
 
-  // Step 4 - Create a new card and add it to the list
-  const list = document.getElementById("medicineList");
+  // Get existing medicines from localStorage
+  const medicines = getSavedMedicines();
 
-  const card = document.createElement("div");
-  card.className = "medicine-card";
+  // Add new medicine to the list
+  medicines.push(medicine);
 
-  card.innerHTML = `
-    <h3>${name}</h3>
-    <p>Batch: <strong>${batch}</strong></p>
-    <p>Quantity: <strong>${quantity} ${unit}</strong></p>
-    <p>Expiry: <strong>${expiry}</strong></p>
-    <span class="badge ${status.class}">${status.label}</span>
-  `;
+  // Save updated list back to localStorage
+  localStorage.setItem("medicines", JSON.stringify(medicines));
 
-  list.prepend(card);
+  // Show the new card on screen
+  displayCard(medicine, true);
 
-  // Step 5 - Clear the form after adding
+  // Clear the form
   document.getElementById("medicineName").value = "";
   document.getElementById("batchNumber").value = "";
   document.getElementById("quantity").value = "";
@@ -41,12 +52,69 @@ function addMedicine() {
 
 }
 
-// This function calculates if medicine is safe, expiring, or expired
+// ==============================
+// 3. LOAD - read from localStorage and show all cards
+// ==============================
+function loadMedicines() {
+  const medicines = getSavedMedicines();
+
+  // Remove the 3 hardcoded cards first
+  const list = document.getElementById("medicineList");
+  list.innerHTML = "";
+
+  // Show each saved medicine
+  medicines.forEach(function(medicine) {
+    displayCard(medicine, false);
+  });
+}
+
+// ==============================
+// 4. DISPLAY - create and show one card
+// ==============================
+function displayCard(medicine, addToTop) {
+  const status = getStatus(medicine.expiry);
+  const list = document.getElementById("medicineList");
+
+  const card = document.createElement("div");
+  card.className = "medicine-card";
+
+  card.innerHTML = `
+    <h3>${medicine.name}</h3>
+    <p>Batch: <strong>${medicine.batch}</strong></p>
+    <p>Quantity: <strong>${medicine.quantity} ${medicine.unit}</strong></p>
+    <p>Expiry: <strong>${medicine.expiry}</strong></p>
+    <span class="badge ${status.class}">${status.label}</span>
+  `;
+
+  if (addToTop) {
+    list.prepend(card);
+  } else {
+    list.appendChild(card);
+  }
+}
+
+// ==============================
+// 5. GET SAVED - read medicines array from localStorage
+// ==============================
+function getSavedMedicines() {
+  const saved = localStorage.getItem("medicines");
+
+  // If nothing saved yet, return empty array
+  if (!saved) {
+    return [];
+  }
+
+  // Convert text back to array
+  return JSON.parse(saved);
+}
+
+// ==============================
+// 6. STATUS - calculate badge from expiry date
+// ==============================
 function getStatus(expiryDate) {
   const today = new Date();
   const expiry = new Date(expiryDate);
 
-  // Calculate difference in days
   const diffTime = expiry - today;
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
